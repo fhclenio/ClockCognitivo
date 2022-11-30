@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import {
   SafeAreaView,
@@ -17,11 +15,7 @@ import {
 } from 'react-native';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 
 import background from "./img/fundo.png";
