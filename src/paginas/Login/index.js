@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 12,
     marginStart: "auto",
+    marginEnd: "auto"
   },
   buttonsecundario: {
     borderColor: "#660099",
