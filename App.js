@@ -1,19 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { View, Text, StyleSheet } from "react-native";
 import Login from "./src/paginas/Login";
+import Route from "./src/routes";
+import React from "react"
 
-const App = () => {
+
+export default function() {
   return (
-    <View style={styles.container}>
-      <Login />
-    </View>
-  );
-};
-
-export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+    <Route />
+  )
+}
