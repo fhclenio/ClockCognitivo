@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
 import CheckBox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
-import { cadastrar } from "../../servicos/requisicoesFirebase";
+import { Cadastrar } from "../../servicos/requisicoesFirebase";
 
 
 export default function Cadastro() {

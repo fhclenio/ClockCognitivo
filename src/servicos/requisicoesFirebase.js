@@ -1,7 +1,7 @@
 import { auth } from "../config/firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, AuthErrorCodes } from "firebase/auth";
 
-export async function cadastrar(email, senha) {
+export async function Cadastrar(email, senha) {
     createUserWithEmailAndPassword(auth, email, senha)
         .then(() => {
             return "";
@@ -11,7 +11,7 @@ export async function cadastrar(email, senha) {
         });
 }
 
-export async function logar(email, senha) {
+export async function Logar(email, senha) {
     const resultado = await signInWithEmailAndPassword(auth, email, senha)
         .then(() => {
             return "";
