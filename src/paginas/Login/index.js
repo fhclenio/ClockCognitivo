@@ -62,7 +62,7 @@ export default function Login() {
       >
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonsecundario} onPress={() => { }}>
+      <TouchableOpacity style={styles.buttonsecundario} onPress={() => { navigation.navigate("Cadastro"); }}>
         <Text style={styles.textButton}>Criar Conta</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.buttonsecundario} onPress={() => { }}>
