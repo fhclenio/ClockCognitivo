@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { logar } from "../../servicos/requisicoesFirebase";
 
@@ -9,19 +9,28 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
+  const [exibirModal, setModalVisible] = useState(false);
+
+  const [mensagemErro, setMensagemErro] = useState("");
+
   async function realizarLogin() {
+    setMensagemErro("");
+
     if (email == "") {
-      console.log("Preencha seu e-mail.");
+      setMensagemErro("Preencha seu e-mail.");
+      setModalVisible(true);
       return;
     }
     else if ((senha == "")) {
-      console.log("Preencha sua senha.");
+      setMensagemErro("Preencha sua senha.");
+      setModalVisible(true);
       return;
     }
 
     let retorno = await logar(email, senha);
     if (retorno) {
-      console.log(retorno);
+      setMensagemErro(retorno.message);
+      setModalVisible(true);
       return;
     }
 
@@ -59,6 +68,26 @@ export default function Login() {
       <TouchableOpacity style={styles.buttonsecundario} onPress={() => { }}>
         <Text style={styles.textButton}>Esqueceu a senha ?</Text>
       </TouchableOpacity>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={exibirModal}
+        onRequestClose={() => { setModalVisible(false); }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={{fontSize: 20}}>Alerta! {"\n"}</Text>
+            <Text style={styles.modalText}>{mensagemErro}{"\n"}</Text>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => { setModalVisible(false); }}
+            >
+              <Text style={styles.textStyle}>Ok</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 }
@@ -124,5 +153,26 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginStart: "auto",
     marginEnd: "auto",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
 });

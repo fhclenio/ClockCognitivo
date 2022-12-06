@@ -3,8 +3,8 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, AuthErrorCo
 
 export async function cadastrar(email, senha) {
     createUserWithEmailAndPassword(auth, email, senha)
-        .then((userCredential) => {
-            return undefined;
+        .then(() => {
+            return "";
         })
         .catch((error) => {
             return error;
@@ -13,8 +13,8 @@ export async function cadastrar(email, senha) {
 
 export async function logar(email, senha) {
     const resultado = await signInWithEmailAndPassword(auth, email, senha)
-        .then((userCredential) => {
-            return undefined;
+        .then(() => {
+            return "";
         })
         .catch((error) => {
             return error;
