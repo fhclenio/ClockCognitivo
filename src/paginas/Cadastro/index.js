@@ -8,6 +8,7 @@ import { cadastrar } from "../../servicos/requisicoesFirebase";
 export default function Cadastro() {
     const navigation = useNavigation();
 
+    const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [confirmaSenha, setConfirmaSenha] = useState("");
@@ -16,14 +17,19 @@ export default function Cadastro() {
 
     const [mensagemErro, setMensagemErro] = useState("");
 
-    const [cuidadorEstaSelecionado, selecionarCuidador] = useState(false);
+    const [cuidadorEstaSelecionado, selecionarCuidador] = useState(true);
     const [pacienteEstaSelecionado, selecionarPaciente] = useState(false);
+    const [pacienteSemCuidadorEstaSelecionado, selecionarPacienteSemCuidador] = useState(false);
 
     async function realizarCadastro() {
 
         setMensagemErro("");
-
-        if (email == "") {
+        if (!nome) {
+            setMensagemErro("Preencha seu nome.");
+            setModalVisible(true);
+            return;
+        }
+        else if (email == "") {
             setMensagemErro("Preencha seu e-mail.");
             setModalVisible(true);
             return;
@@ -39,14 +45,21 @@ export default function Cadastro() {
             return;
         }
 
-        let retorno = await cadastrar(email, senha);
+        let tipo = "";
+        if (cuidadorEstaSelecionado)
+            tipo = "cuidadores";
+        else if (pacienteEstaSelecionado)
+            tipo = "pacientes";
+        else
+            tipo = "pacientesSemCuidador"
+
+        let retorno = await cadastrar(nome, email, senha, tipo);
         if (retorno) {
             setMensagemErro(retorno.message);
             setModalVisible(true);
             return;
         }
 
-        
         navigation.navigate("Login");
     }
 
@@ -56,6 +69,13 @@ export default function Cadastro() {
             style={styles.container}
         >
             <Image style={styles.logo} source={require("../../img/logo.png")} />
+
+            <Text style={styles.text}>Nome</Text>
+            <TextInput
+                style={styles.input}
+                value={nome}
+                onChangeText={(texto) => setNome(texto)}
+            />
 
             <Text style={styles.text}>E-mail</Text>
             <TextInput
@@ -80,23 +100,48 @@ export default function Cadastro() {
                 onChangeText={(texto) => setConfirmaSenha(texto)}
             />
             <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
-                <View style={{ flexDirection: "row", marginEnd: 30 }}>
+                <View style={{ flexDirection: "row", marginEnd: 15 }}>
                     <CheckBox
                         value={cuidadorEstaSelecionado}
-                        onValueChange={valor => selecionarCuidador(valor)}
+                        onValueChange={valor => {
+                            selecionarCuidador(valor);
+                            if (valor) {
+                                selecionarPacienteSemCuidador(false);
+                                selecionarPaciente(false);
+                            }
+                        }}
                         style={{ alignSelf: "center" }}
                     />
                     <Text style={{ color: "white", paddingStart: 4 }}>Cuidador</Text>
                 </View>
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", marginEnd: 15 }}>
                     <CheckBox
                         value={pacienteEstaSelecionado}
-                        onValueChange={valor => selecionarPaciente(valor)}
+                        onValueChange={valor => {
+                            selecionarPaciente(valor);
+                            if (valor) {
+                                selecionarCuidador(false);
+                                selecionarPacienteSemCuidador(false);
+                            }
+                        }}
                         style={{ alignSelf: "center" }}
                     />
                     <Text style={{ color: "white", paddingStart: 4 }}>Paciente</Text>
                 </View>
-
+                <View style={{ flexDirection: "row" }}>
+                    <CheckBox
+                        value={pacienteSemCuidadorEstaSelecionado}
+                        onValueChange={valor => {
+                            selecionarPacienteSemCuidador(valor);
+                            if (valor) {
+                                selecionarCuidador(false);
+                                selecionarPaciente(false);
+                            }
+                        }}
+                        style={{ alignSelf: "center" }}
+                    />
+                    <Text style={{ color: "white", paddingStart: 4 }}>Paciente Sem Cuidador</Text>
+                </View>
             </View>
 
             <TouchableOpacity
@@ -115,9 +160,8 @@ export default function Cadastro() {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={{ fontSize: 20 }}>Alerta! {"\n"}</Text>
-                        <Text style={styles.modalText}>{mensagemErro}{"\n"}</Text>
+                        <Text >{mensagemErro}{"\n"}</Text>
                         <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
                             onPress={() => { setModalVisible(false); }}
                         >
                             <Text style={styles.textStyle}>Ok</Text>
