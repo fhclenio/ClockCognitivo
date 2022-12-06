@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { logar } from "../../servicos/requisicoesFirebase";
+import { Logar } from "../../servicos/requisicoesFirebase";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -27,14 +27,14 @@ export default function Login() {
       return;
     }
 
-    let retorno = await logar(email, senha);
+    let retorno = await Logar(email, senha);
     if (retorno) {
       setMensagemErro(retorno.message);
       setModalVisible(true);
       return;
     }
 
-    navigation.navigate("Home");
+    navigation.navigate("Cuidador");
   }
 
   return (
@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 12,
     marginStart: "auto",
-    marginEnd: "auto",
   },
   buttonsecundario: {
     borderColor: "#660099",

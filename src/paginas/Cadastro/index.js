@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
 import CheckBox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
-import { cadastrar } from "../../servicos/requisicoesFirebase";
+import { Cadastrar } from "../../servicos/requisicoesFirebase";
 
 
 export default function Cadastro() {
@@ -53,7 +53,7 @@ export default function Cadastro() {
         else
             tipo = "pacientesSemCuidador"
 
-        let retorno = await cadastrar(nome, email, senha, tipo);
+        let retorno = await Cadastrar(nome, email, senha, tipo);
         if (retorno) {
             setMensagemErro(retorno.message);
             setModalVisible(true);

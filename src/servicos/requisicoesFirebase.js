@@ -3,7 +3,7 @@ import { db } from "../config/firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, AuthErrorCodes } from "firebase/auth";
 import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";
 
-export async function cadastrar(nome, email, senha, tipo) {
+export async function Cadastrar(nome, email, senha, tipo) {
     const resultado = await createUserWithEmailAndPassword(auth, email, senha)
         .then((crendenciais) => {
             try {
@@ -28,7 +28,7 @@ export async function cadastrar(nome, email, senha, tipo) {
     return resultado;
 }
 
-export async function logar(email, senha) {
+export async function Logar(email, senha) {
     const resultado = await signInWithEmailAndPassword(auth, email, senha)
         .then((crendenciais) => {
             return "";

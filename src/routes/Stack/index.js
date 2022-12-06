@@ -13,7 +13,6 @@ export default function () {
     return (
         <Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
             <Screen name="Login" component={Login} />
-            <Screen name="Home" component={Home} />
             <Screen name="Cadastro" component={Cadastro} />
             <Screen name="Paciente" component={Paciente} />
             <Screen name="Cuidador" component={Cuidador} />
