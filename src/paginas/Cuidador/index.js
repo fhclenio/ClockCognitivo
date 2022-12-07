@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#3A0057",
+        paddingTop: 25
     },
     titulo: {
         fontSize: 22,
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#3A0057",
         marginLeft: 16,
         marginRight: 16,
+        marginTop: 20,
         borderRadius: 13,
         alignItems: "center",
         flexDirection: "column",
