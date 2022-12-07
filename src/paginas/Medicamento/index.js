@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import CheckBox from "expo-checkbox";
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { CadastrarMedicamentoDoPaciente } from "../../servicos/requisicoesFirebase.js";
+import { auth } from '../../config/firebase';
+
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
@@ -28,9 +31,23 @@ export default function Medicamento() {
         carregarTokenDeNotificacoes().then(token => setExpoPushToken(token));
     }, []);
 
-    function salvar() {
+    async function salvar() {
         let dias = montarDias();
-        agendarNovoAlarme("Vitamina b2", "serve para o desenvolvimento e manutenção das funções do sistema nervoso.", dias, horario);
+        let nomeMedicamento = "Vitamina b2";
+        let descricao = "serve para o desenvolvimento e manutenção das funções do sistema nervoso.";
+
+        if (dias.length == 0) {
+            alerta("Selecione pelo menos um dia.");
+            return;
+        }
+        if (horario.length == 0) {
+            alerta("Digite um horário.");
+            return;
+        }
+
+        const medicamento = await CadastrarMedicamentoDoPaciente(auth.currentUser.uid, nomeMedicamento, descricao, "jorge", dias, horario);
+        if (medicamento)
+            agendarNovoAlarme(nomeMedicamento, descricao, dias, horario);
     }
 
     function montarDias() {
