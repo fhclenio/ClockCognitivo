@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
+import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import CheckBox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
 import { Cadastrar } from "../../servicos/requisicoesFirebase";
@@ -13,35 +13,25 @@ export default function Cadastro() {
     const [senha, setSenha] = useState("");
     const [confirmaSenha, setConfirmaSenha] = useState("");
 
-    const [exibirModal, setModalVisible] = useState(false);
-
-    const [mensagemErro, setMensagemErro] = useState("");
-
     const [cuidadorEstaSelecionado, selecionarCuidador] = useState(true);
     const [pacienteEstaSelecionado, selecionarPaciente] = useState(false);
     const [pacienteSemCuidadorEstaSelecionado, selecionarPacienteSemCuidador] = useState(false);
 
     async function realizarCadastro() {
-
-        setMensagemErro("");
         if (!nome) {
-            setMensagemErro("Preencha seu nome.");
-            setModalVisible(true);
+            alerta("Preencha seu nome.");
             return;
         }
         else if (email == "") {
-            setMensagemErro("Preencha seu e-mail.");
-            setModalVisible(true);
+            alerta("Preencha seu e-mail.");
             return;
         }
         else if ((senha == "")) {
-            setMensagemErro("Preencha sua senha.");
-            setModalVisible(true);
+            alerta("Preencha sua senha.");
             return;
         }
         else if ((senha != confirmaSenha)) {
-            setMensagemErro("As senhas devem ser iguais.");
-            setModalVisible(true);
+            alerta("As senhas devem ser iguais.");
             return;
         }
 
@@ -55,12 +45,21 @@ export default function Cadastro() {
 
         let retorno = await Cadastrar(nome, email, senha, tipo);
         if (retorno) {
-            setMensagemErro(retorno.message);
-            setModalVisible(true);
+            alerta(retorno.message);
             return;
         }
 
         navigation.navigate("Login");
+    }
+
+    function alerta(mensagem) {
+        Alert.alert(
+            "Alerta!",
+            mensagem,
+            [
+                { text: "OK", onPress: () => { } }
+            ]
+        );
     }
 
     return (
@@ -104,11 +103,13 @@ export default function Cadastro() {
                     <CheckBox
                         value={cuidadorEstaSelecionado}
                         onValueChange={valor => {
-                            selecionarCuidador(valor);
                             if (valor) {
+                                selecionarCuidador(valor);
                                 selecionarPacienteSemCuidador(false);
                                 selecionarPaciente(false);
                             }
+                            else
+                                selecionarCuidador(!valor);
                         }}
                         style={{ alignSelf: "center" }}
                     />
@@ -118,11 +119,13 @@ export default function Cadastro() {
                     <CheckBox
                         value={pacienteEstaSelecionado}
                         onValueChange={valor => {
-                            selecionarPaciente(valor);
                             if (valor) {
+                                selecionarPaciente(valor);
                                 selecionarCuidador(false);
                                 selecionarPacienteSemCuidador(false);
                             }
+                            else
+                                selecionarPaciente(!valor);
                         }}
                         style={{ alignSelf: "center" }}
                     />
@@ -132,11 +135,13 @@ export default function Cadastro() {
                     <CheckBox
                         value={pacienteSemCuidadorEstaSelecionado}
                         onValueChange={valor => {
-                            selecionarPacienteSemCuidador(valor);
                             if (valor) {
+                                selecionarPacienteSemCuidador(valor);
                                 selecionarCuidador(false);
                                 selecionarPaciente(false);
                             }
+                            else
+                                selecionarPacienteSemCuidador(!valor);
                         }}
                         style={{ alignSelf: "center" }}
                     />
@@ -150,25 +155,6 @@ export default function Cadastro() {
             >
                 <Text style={styles.text}>Salvar</Text>
             </TouchableOpacity>
-
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={exibirModal}
-                onRequestClose={() => { setModalVisible(false); }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={{ fontSize: 20 }}>Alerta! {"\n"}</Text>
-                        <Text >{mensagemErro}{"\n"}</Text>
-                        <TouchableOpacity
-                            onPress={() => { setModalVisible(false); }}
-                        >
-                            <Text style={styles.textStyle}>Ok</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
         </ImageBackground>
     )
 }

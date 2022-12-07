@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import {
     View,
@@ -10,9 +11,10 @@ import { ConsultarInformacoesDoUsuarioAtual, ConsultarPacienteComCuidador, Consu
 
 export default function Cuidador() {
 
-    const [listaDePacientes, setListaDePacientes] = useState([]);
+    const [componentesPacientes, setListaDePacientes] = useState([]);
     const [cuidador, setCuidador] = useState(undefined);
 
+    const navigation = useNavigation();
 
     useEffect(() => {
         const carregarPacientes = async () => {
@@ -66,7 +68,7 @@ export default function Cuidador() {
                 <Text style={styles.textBody}>LISTA DE PACIENTES</Text>
                 <View style={styles.bodycard}>
                     <ScrollView>
-                        {listaDePacientes}
+                        {componentesPacientes}
                     </ScrollView>
                 </View>
             </View>

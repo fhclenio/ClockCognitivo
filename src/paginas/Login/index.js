@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
+import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { ConsultarTipoDoUsuarioAtual, Logar } from "../../servicos/requisicoesFirebase";
 
@@ -9,31 +9,22 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  const [exibirModal, setModalVisible] = useState(false);
-
-  const [mensagemErro, setMensagemErro] = useState("");
-
   async function realizarLogin() {
-    setMensagemErro("");
-
     if (email == "") {
-      setMensagemErro("Preencha seu e-mail.");
-      setModalVisible(true);
+      alerta("Preencha seu e-mail.");
       return;
     }
     else if ((senha == "")) {
-      setMensagemErro("Preencha sua senha.");
-      setModalVisible(true);
+      alerta("Preencha sua senha.");
       return;
     }
 
     let retorno = await Logar(email, senha);
     if (retorno.erro) {
-      setMensagemErro(retorno.erro.message);
-      setModalVisible(true);
+      alerta(retorno.erro.message);
       return;
     }
-    
+
     let tipo = await ConsultarTipoDoUsuarioAtual();
     switch (tipo) {
       case "cuidadores":
@@ -43,6 +34,16 @@ export default function Login() {
         navigation.navigate("Paciente");
         break;
     }
+  }
+
+  function alerta(mensagem) {
+    Alert.alert(
+      "Alerta!",
+      mensagem,
+      [
+        { text: "OK", onPress: () => { } }
+      ]
+    );
   }
 
   return (
@@ -76,26 +77,6 @@ export default function Login() {
       <TouchableOpacity style={styles.buttonsecundario} onPress={() => { }}>
         <Text style={styles.textButton}>Esqueceu a senha ?</Text>
       </TouchableOpacity>
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={exibirModal}
-        onRequestClose={() => { setModalVisible(false); }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={{ fontSize: 20 }}>Alerta! {"\n"}</Text>
-            <Text style={styles.modalText}>{mensagemErro}{"\n"}</Text>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => { setModalVisible(false); }}
-            >
-              <Text style={styles.textStyle}>Ok</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </ImageBackground>
   );
 }
