@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, Image, ImageBackground, TextInput, TouchableOpacity, Modal, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Logar } from "../../servicos/requisicoesFirebase";
+import { ConsultarTipoDoUsuarioAtual, Logar } from "../../servicos/requisicoesFirebase";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -28,13 +28,21 @@ export default function Login() {
     }
 
     let retorno = await Logar(email, senha);
-    if (retorno) {
-      setMensagemErro(retorno.message);
+    if (retorno.erro) {
+      setMensagemErro(retorno.erro.message);
       setModalVisible(true);
       return;
     }
-
-    navigation.navigate("Cuidador");
+    
+    let tipo = await ConsultarTipoDoUsuarioAtual();
+    switch (tipo) {
+      case "cuidadores":
+        navigation.navigate("Cuidador");
+        break;
+      case "pacientes":
+        navigation.navigate("Paciente");
+        break;
+    }
   }
 
   return (
@@ -77,7 +85,7 @@ export default function Login() {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={{fontSize: 20}}>Alerta! {"\n"}</Text>
+            <Text style={{ fontSize: 20 }}>Alerta! {"\n"}</Text>
             <Text style={styles.modalText}>{mensagemErro}{"\n"}</Text>
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}

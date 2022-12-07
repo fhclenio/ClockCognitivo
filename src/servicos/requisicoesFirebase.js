@@ -13,10 +13,12 @@ export async function Cadastrar(nome, email, senha, tipo) {
                     login: email.split('').splice(0, email.indexOf('@')).join(''),
                     nome,
                 });
+
+                setDoc(doc(db, 'tipoUsuario', crendenciais.user.uid), {
+                    tipo
+                });
             }
             catch (error) {
-                console.log(error);
-
                 return error;
             }
             return "";
@@ -31,19 +33,29 @@ export async function Cadastrar(nome, email, senha, tipo) {
 export async function Logar(email, senha) {
     const resultado = await signInWithEmailAndPassword(auth, email, senha)
         .then((crendenciais) => {
-            return "";
+            return { usuario: crendenciais }
         })
         .catch((error) => {
-            return error;
+            return { erro: error }
         });
 
     return resultado;
 }
 
+export async function ConsultarTipoDoUsuarioAtual() {
+    let tipo = "";
+    const tipoUsuario = await getDoc(doc(db, "tipoUsuario", auth.currentUser.uid));
 
-export async function consultarInformacoesDoUsuarioAtual(tipoUsuario) {
-    const docRef = doc(db, tipoUsuario, auth.currentUser.uid);
-    const docSnap = await getDoc(docRef);
+    if (tipoUsuario.exists())
+        tipo = tipoUsuario.data().tipo;
+
+    return tipo;
+}
+
+export async function ConsultarInformacoesDoUsuarioAtual() {
+    let tipo = ConsultarTipoDoUsuarioAtual();
+
+    const docSnap = await getDoc(doc(db, tipo, auth.currentUser.uid));
 
     if (docSnap.exists()) {
         var data = docSnap.data();
