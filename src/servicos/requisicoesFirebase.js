@@ -1,13 +1,13 @@
 import { auth } from "../config/firebase";
 import { db } from "../config/firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, AuthErrorCodes } from "firebase/auth";
-import { collection, addDoc, getDoc, setDoc, doc } from "firebase/firestore";
+import { collection, getDocs, getDoc, setDoc, doc } from "firebase/firestore";
 
 export async function Cadastrar(nome, email, senha, tipo) {
     const resultado = await createUserWithEmailAndPassword(auth, email, senha)
         .then((crendenciais) => {
             try {
-                const usuario = setDoc(doc(db, tipo, crendenciais.user.uid), {
+                setDoc(doc(db, tipo, crendenciais.user.uid), {
                     email,
                     senha,
                     login: email.split('').splice(0, email.indexOf('@')).join(''),
@@ -53,13 +53,25 @@ export async function ConsultarTipoDoUsuarioAtual() {
 }
 
 export async function ConsultarInformacoesDoUsuarioAtual() {
-    let tipo = ConsultarTipoDoUsuarioAtual();
+    let tipo = await ConsultarTipoDoUsuarioAtual();
 
     const docSnap = await getDoc(doc(db, tipo, auth.currentUser.uid));
+    if (docSnap.exists()) 
+        return docSnap.data();
 
-    if (docSnap.exists()) {
-        var data = docSnap.data();
-        return data;
-    }
+    return null;
+}
+
+export async function ConsultarPacientesDoCuidador() {
+    const docRef = doc(db, 'cuidadores', auth.currentUser.uid);
+    const pacientes = await getDocs(collection(docRef, "pacientes"));
+    return pacientes;
+}
+
+export async function ConsultarPacienteComCuidador(uid){
+    const docSnap = await getDoc(doc(db, 'pacientes', uid));
+    if (docSnap.exists()) 
+        return docSnap;
+
     return null;
 }

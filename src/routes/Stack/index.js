@@ -1,6 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from "../../paginas/Home";
 import Login from "../../paginas/Login";
 import Cadastro from "../../paginas/Cadastro";
 import Paciente from "../../paginas/Paciente";
