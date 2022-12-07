@@ -62,6 +62,16 @@ export async function ConsultarInformacoesDoUsuarioAtual() {
     return null;
 }
 
+export async function ConsultarInformacoesDoUsuario(uid) {
+    let tipo = await ConsultarTipoDoUsuarioAtual();
+
+    const docSnap = await getDoc(doc(db, tipo, uid));
+    if (docSnap.exists())
+        return docSnap.data();
+
+    return null;
+}
+
 export async function ConsultarPacientesDoCuidador() {
     const docRef = doc(db, 'cuidadores', auth.currentUser.uid);
     const pacientes = await getDocs(collection(docRef, "pacientes"));
@@ -93,4 +103,10 @@ export async function CadastrarMedicamentoDoPaciente(uidPaciente, medicamento, d
     catch (error) {
         return error;
     }
+}
+
+export async function ConsultarMedicamentosDoPaciente(uid) {
+    const docRef = doc(db, 'pacientes', uid);
+    const medicamentos = await getDocs(collection(docRef, "medicamentos"));
+    return medicamentos;
 }
