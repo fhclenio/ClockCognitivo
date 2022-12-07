@@ -30,7 +30,7 @@ export default function Cuidador() {
                         <View key={docPaciente.id} style={styles.card}>
                             <View style={styles.cardHeader}>
                                 <Text style={styles.tituloCard}>{paciente.nome}</Text>
-                                <Text style={styles.tituloCard}>55 anos - Lar Almeita Couto</Text>
+                                <Text style={styles.tituloCard}>{paciente.idade} anos - {paciente.residencia}</Text>
                             </View>
                             <View style={styles.bodyCard}>
                                 <TouchableOpacity style={styles.listCard} onPress={() => { }}>
@@ -52,7 +52,7 @@ export default function Cuidador() {
     return (
         <View>
             <View style={styles.header}>
-                <Text style={styles.titulo}>Cuidador - {cuidador.nome}</Text>
+                <Text style={styles.titulo}>Cuidador - {cuidador?.nome}</Text>
             </View>
             <View style={styles.buttonHeader}>
                 <TouchableOpacity style={styles.buttonHome} onPress={() => { }}>
