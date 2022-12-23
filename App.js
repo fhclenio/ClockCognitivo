@@ -1,19 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet } from "react-native";
-import Login from "./src/paginas/Login";
+import Route from "./src/routes";
+import { LogBox } from 'react-native';
 
-const App = () => {
+export default function() {
+  LogBox.ignoreLogs(["AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage"]);
   return (
-    <View style={styles.container}>
-      <Login />
-    </View>
-  );
-};
-
-export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+    <Route />
+  )
+}
